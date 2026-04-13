@@ -8,7 +8,6 @@ import {
   useChainId,
   useSwitchChain,
 } from "wagmi";
-import { injected } from "wagmi/connectors";
 import { shortenAddress, formatCBTC } from "@/lib/utils";
 import { citreaTestnet } from "@/lib/wagmi/citrea-testnet";
 
@@ -20,7 +19,7 @@ export function ConnectButton() {
   const chainId = useChainId();
   const onCitrea = chainId === citreaTestnet.id;
 
-  const { connect, isPending, error, reset } = useConnect();
+  const { connect, connectors, isPending, error, reset } = useConnect();
   const { disconnect } = useDisconnect();
   const { switchChain, isPending: isSwitchPending } = useSwitchChain();
 
@@ -32,8 +31,12 @@ export function ConnectButton() {
 
   const handleConnect = () => {
     reset();
+    const metaMaskConnector = connectors.find((c) => c.id === "metaMask");
+    const injectedConnector = connectors.find((c) => c.id === "injected");
+    const connector = metaMaskConnector ?? injectedConnector ?? connectors[0];
+    if (!connector) return;
     connect({
-      connector: injected(),
+      connector,
       chainId: citreaTestnet.id,
     });
   };
@@ -84,7 +87,11 @@ export function ConnectButton() {
         {isPending ? "Connecting..." : "Wallet"}
       </button>
       {error && (
-        <p className="text-xs text-red-400/90 text-right max-w-xs">{error.message.slice(0, 160)}</p>
+        <p className="text-xs text-red-400/90 text-right max-w-xs">
+          {error.message.includes("Provider not found")
+            ? "No wallet in this browser. Install MetaMask or Rabby, open the site in a normal window (not a strict preview), then try again."
+            : error.message.slice(0, 160)}
+        </p>
       )}
     </div>
   );
