@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #121212;
+  --foreground: #e8e4e0;
+  --muted: #9c9690;
+  --accent: #a3442e;
+  --accent-dark: #7a3323;
+  --accent-soft: rgba(163, 68, 46, 0.14);
+  --card-bg: #181818;
+  --card-border: rgba(163, 68, 46, 0.35);
+  --hover-bg: #222222;
+  --frame: #a3442e;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  letter-spacing: 0.01em;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}
